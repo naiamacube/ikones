@@ -1,0 +1,12 @@
+version: 2.1
+
+jobs:
+  build:
+    working_directory: /
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build -t naiama/ikones:0.1.0 Dockerfile .
+      - run: docker push naiama/ikones:0.1.0
