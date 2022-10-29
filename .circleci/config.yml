@@ -1,11 +1,23 @@
 version: 2.1
 
+workflows:
+  my-workflow:
+    jobs:
+      - build:
+          context:
+            - build-env-vars
+            - docker-hub-creds
+
 jobs:
   build:
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: acme-private/private-image:321
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_TOKEN
+
     steps:
       - checkout
       - setup_remote_docker
-      - run: docker build -t naiama/ikones:0.1.0 Dockerfile .
-      - run: docker push naiama/ikones:0.1.0
+      - run: docker build -t naiama/elland:0.1.0 -f Dockerfile .
+      - run: docker push naiama/elland:0.1.0
