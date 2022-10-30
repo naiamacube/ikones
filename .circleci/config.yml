@@ -11,7 +11,7 @@ jobs:
   elland:
     machine:
       image: ubuntu-2004:202010-01
-	steps:
+        steps:
         - checkout
         - run: |
           IMG_NAME="naiama/elland:0.1.0"
