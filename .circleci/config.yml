@@ -10,7 +10,7 @@ workflows:
 
 jobs:
   elland:
-    working_directory: /home/circleci/project/elland
+    # working_directory: /home/circleci/project/elland
     docker:
       - image: cimg/base:2021.04
         auth:
@@ -20,5 +20,5 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: docker build -t naiama/elland:0.1.0 -f Dockerfile .
+      - run: docker build -t naiama/elland:0.1.0 -f elland/Dockerfile .
       - run: docker push naiama/elland:0.1.0
