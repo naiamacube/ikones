@@ -10,7 +10,7 @@ workflows:
 
 jobs:
   elland:
-    working_directory: elland
+    working_directory: /home/circleci/project/elland
     docker:
       - image: cimg/base:2021.04
         auth:
