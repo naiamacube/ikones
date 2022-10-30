@@ -3,9 +3,7 @@ version: 2.1
 workflows:
   build-images:
     jobs:
-      - elland:
-        context:
-          - build-env-vars
+      - elland
 
 jobs:
   elland:
