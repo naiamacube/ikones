@@ -3,13 +3,14 @@ version: 2.1
 workflows:
   build-images:
     jobs:
-      - build
+      - build:
+          context:
+            - docker-auth
 
 jobs:
   build:
     machine:
       image: ubuntu-2004:202010-01
-    context: docker-auth
     steps:
       - checkout
       - run:
