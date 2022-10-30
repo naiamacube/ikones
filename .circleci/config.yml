@@ -10,15 +10,14 @@ workflows:
 
 jobs:
   elland:
-    # working_directory: /home/circleci/project/elland
     docker:
       - image: cimg/base:2021.04
         auth:
           username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_TOKEN
+          password: $DOCKERHUB_ACCESS_TOKEN
 
     steps:
       - checkout
       - setup_remote_docker
       - run: docker build -t naiama/elland:0.1.0 -f elland/Dockerfile .
-      - run: docker image push naiama/elland:0.1.0
+      - run: docker push naiama/elland:0.1.0
