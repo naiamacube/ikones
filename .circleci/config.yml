@@ -1,7 +1,7 @@
 version: 2.1
 
 workflows:
-  my-workflow:
+  build-images:
     jobs:
       - build:
           context:
@@ -11,7 +11,7 @@ workflows:
 jobs:
   build:
     docker:
-      - image: acme-private/private-image:321
+      - image: cimg/base:2021.04
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_TOKEN
