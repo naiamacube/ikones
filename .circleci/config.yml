@@ -1,20 +1,20 @@
 version: 2.1
 
 workflows:
-  build-images:
-    jobs:
-      - elland:
-          context:
-            - build-env-vars
+	build-images:
+		jobs:
+			- elland:
+				context:
+					- build-env-vars
 
 jobs:
-  elland:
-    machine:
-      image: ubuntu-2004:202010-01
-        steps:
-        - checkout
-        - run: |
-          IMG_NAME="naiama/elland:0.1.0"
-          docker build -t $IMG_NAME -f elland/Dockerfile elland
-	  docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN
-      	  docker push $IMG_NAME
+	elland:
+		machine:
+			image: ubuntu-2004:202010-01
+				steps:
+				- checkout
+				- run: |
+					IMG_NAME="naiama/elland:0.1.0"
+					docker build -t $IMG_NAME -f elland/Dockerfile elland
+					docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN
+					docker push $IMG_NAME
