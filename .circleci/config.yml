@@ -3,13 +3,14 @@ version: 2.1
 workflows:
   build-images:
     jobs:
-      - build:
+      - elland:
           context:
             - build-env-vars
             - docker-hub-creds
 
 jobs:
-  build:
+  elland:
+    working_directory: elland
     docker:
       - image: cimg/base:2021.04
         auth:
