@@ -21,4 +21,4 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: docker build -t naiama/elland:0.1.0 -f elland/Dockerfile .
-      - run: docker push naiama/elland:0.1.0
+      - run: docker image push naiama/elland:0.1.0
