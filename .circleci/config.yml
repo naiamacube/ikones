@@ -3,7 +3,7 @@ version: 2.1
 workflows:
   build-images:
     jobs:
-      - elland
+      elland
 
 jobs:
   elland:
