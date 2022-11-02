@@ -3,7 +3,6 @@ FROM ubuntu:22.04
 LABEL com.naiama.image.author="mlops@naiama.com"
 
 RUN apt-get update && apt-get install -y build-essential curl python3.11 python3.11-dev
-ENV python python3.11
 
 ENV ANACONDA Anaconda3-2022.10-Linux-x86_64.sh
 ENV ANACONDA_CHECKSUM e7ecbccbc197ebd7e1f211c59df2e37bc6959d081f2235d387e08c9026666acd
@@ -16,7 +15,7 @@ RUN $HOME/anaconda3/bin/conda install pytorch torchvision torchaudio cpuonly -c 
 
 RUN $HOME/anaconda3/bin/conda install pytorch-lightning -c conda-forge
 
-RUN python3 -m pip install torch-scatter torch-sparse torch-geometric
+RUN python3.11 -m pip install torch-scatter torch-sparse torch-geometric
 
 # RUN pip install torch-scatter && \
     # pip install torch-sparse && \
