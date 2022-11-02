@@ -2,25 +2,32 @@ FROM ubuntu:22.04
 
 LABEL com.naiama.image.author="mlops@naiama.com"
 
-RUN apt-get update && apt-get install -y build-essential curl python3.11 python3.11-dev python3-pip
+SHELL ["/bin/bash", "-c"]
 
-ENV ANACONDA Anaconda3-2022.10-Linux-x86_64.sh
-ENV ANACONDA_CHECKSUM e7ecbccbc197ebd7e1f211c59df2e37bc6959d081f2235d387e08c9026666acd
-RUN curl -O https://repo.anaconda.com/archive/$ANACONDA && \
-    shasum -a256 $ANACONDA | awk -v ac=$ANACONDA_CHECKSUM '$1==ac{print checksum-ok}' && \
-    bash $ANACONDA -bf && eval "$($HOME/anaconda3/bin/conda shell.bash hook)" && conda init
+RUN apt-get update && apt-get install -y build-essential curl vim
 
-# There is no maintained binary for PyTorch CPU-only, so we have to compile from source
-RUN $HOME/anaconda3/bin/conda install pytorch torchvision torchaudio cpuonly -c pytorch
+WORKDIR /tmp
+ENV MINICONDA Miniconda3-py39_4.12.0-Linux-x86_64.sh
+ENV MINICONDA_CHECKSUM 78f39f9bae971ec1ae7969f0516017f2413f17796670f7040725dd83fcff5689
+RUN curl -O https://repo.anaconda.com/miniconda/$MINICONDA && \
+    shasum -a256 $MINICONDA | awk -v ac=$MINICONDA_CHECKSUM '$1==ac{print checksum-ok}'
+RUN bash $MINICONDA -b -p /opt/miniconda
+ENV PATH /opt/miniconda/bin:$PATH
+RUN eval "$(conda shell.bash hook)"
 
-RUN $HOME/anaconda3/bin/conda install pytorch-lightning -c conda-forge
+RUN conda update -n base -c defaults conda
 
-RUN python3.11 -m pip install torch-scatter torch-sparse torch-geometric
+# Python 3.9.*
+COPY ./environment.yml ./
+RUN conda env create -f environment.yml
+RUN conda init
+SHELL ["conda", "run", "-n", "mlops", "/bin/bash", "-c"]
 
-# RUN pip install torch-scatter && \
-    # pip install torch-sparse && \
-    # pip install torch-geometric && \
-    # pip install torch-cluster && \
-    # pip install torch-spline-conv
+# PyTorch 1.13.1 + pre-requisites
+RUN conda install astunparse numpy ninja pyyaml setuptools cmake cffi typing_extensions future six requests dataclasses mkl mkl-include
+RUN conda install pytorch torchvision torchaudio cpuonly -c pytorch
+
+# Lightning 1.7.7
+RUN conda install pytorch-lightning -c conda-forge
 
 CMD ["/bin/bash"]
