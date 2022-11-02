@@ -11,7 +11,6 @@ jobs:
   build:
     machine:
       image: ubuntu-2022:2022.10.1
-      resource_class: medium
       docker_layer_caching: true
     steps:
       - checkout
