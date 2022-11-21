@@ -11,10 +11,10 @@ jobs:
   build:
     description: Build image from dockerfile and push to Naiama DockerHub
     parameters:
-      name:
+      img-name:
         description: Image name
         type: string
-      version:
+      img-version:
         description: Image version
         type: string
     parallelism: 2
@@ -24,8 +24,8 @@ jobs:
       - checkout
       - run:
           command: |
-            IMG_NAME="naiama/<< parameters.name >>:<< parameters.version>>"
-            docker build -t $IMG_NAME -f << parameters.name >>/Dockerfile << parameters.name >>
+            IMG_NAME="naiama/<< parameters.img-name >>:<< parameters.img-version>>"
+            docker build -t $IMG_NAME -f << parameters.img-name >>/Dockerfile << parameters.img-name >>
             docker login -u $DOCKERHUB_UERSNAME -p $DOCKERHUB_ACCESS_TOKEN
             docker push $IMG_NAME
 
@@ -35,13 +35,13 @@ workflows:
       - build:
           context:
             - docker-auth
-          name: elland
-          version: 0.1.0
+          img-name: elland
+          img-version: 0.1.0
       - build:
           context:
             - docker-auth
-          name: longor
-          version: 0.1.0
+          img-name: longor
+          img-version: 0.1.0
 
             # build:
             # executor: 
