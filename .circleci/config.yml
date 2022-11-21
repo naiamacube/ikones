@@ -17,8 +17,7 @@ jobs:
       version:
         description: Image version
         type: string
-    context:
-      - docker-auth
+    parallelism: 2
     executor:
       name: ubuntu
     steps:
@@ -34,9 +33,13 @@ workflows:
   build-images:
     jobs:
       - build:
+          context:
+            - docker-auth
           name: elland
           version: 0.1.0
       - build:
+          context:
+            - docker-auth
           name: longor
           version: 0.1.0
 
