@@ -1,31 +1,66 @@
 version: 2.1
 
-workflows:
-  build-images:
-    jobs:
-      - build:
-          context:
-            - docker-auth
-
-jobs:
-  build:
+executors:
+  ubuntu:
     machine:
       image: ubuntu-2204:2022.10.1
       resource_class: medium
       docker_layer_caching: true
+
+jobs:
+  build:
+    description: Build image from dockerfile and push to Naiama DockerHub
+    parameters:
+      name:
+        description: Image name
+        type: string
+      version:
+        description: Image version
+        type: string
+    context:
+      - docker-auth
+    executor:
+      name: ubuntu
     steps:
       - checkout
       - run:
           command: |
-            IMG_NAME="naiama/elland:0.1.0"
-            docker build -t $IMG_NAME -f elland/Dockerfile elland
-            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN         
+            IMG_NAME="naiama/<< parameters.name >>:<< parameters.version>>"
+            docker build -t $IMG_NAME -f << parameters.name >>/Dockerfile << parameters.name >>
+            docker login -u $DOCKERHUB_UERSNAME -p $DOCKERHUB_ACCESS_TOKEN
             docker push $IMG_NAME
-      - run:
-          command: |
-            IMG_NAME="naiama/longor:0.1.0"
-            docker build -t $IMG_NAME -f longor/Dockerfile longor
-            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN         
-            docker push $IMG_NAME
+
+workflows:
+  build-images:
+    jobs:
+      - build:
+          name: elland
+          version: 0.1.0
+      - build:
+          name: longor
+          version: 0.1.0
+
+            # build:
+            # executor: 
+            # name: ubuntu
+            # steps:
+            # - checkout
+            # - run:
+            # command: |
+            # IMG_NAME="naiama/elland:0.1.0"
+            # docker build -t $IMG_NAME -f elland/Dockerfile elland
+            # docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN         
+            # docker push $IMG_NAME
+            # 
+            # longor:
+            # executor:
+            # name: ubuntu
+            # steps:
+            # - run:
+            # command: |
+            # IMG_NAME="naiama/longor:0.1.0"
+            # docker build -t $IMG_NAME -f longor/Dockerfile longor
+            # docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN         
+            # docker push $IMG_NAME
           
 
