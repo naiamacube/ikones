@@ -33,12 +33,10 @@ workflows:
   build-images:
     jobs:
       - build:
-          context:
-            - docker-auth
+          context: docker-auth
           img-name: elland
           img-version: 0.1.0
       - build:
-          context:
-            - docker-auth
+          context: docker-auth
           img-name: longor
           img-version: 0.1.0
