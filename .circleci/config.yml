@@ -26,7 +26,7 @@ jobs:
           command: |
             IMG_NAME="naiama/<< parameters.img-name >>:<< parameters.img-version>>"
             docker build -t $IMG_NAME -f << parameters.img-name >>/Dockerfile << parameters.img-name >>
-            docker login -u $DOCKERHUB_UERSNAME -p $DOCKERHUB_ACCESS_TOKEN
+            echo $DOCKERHUB_ACCESS_TOKEN | docker login -u $DOCKERHUB_UERSNAME --passord-stdin
             docker push $IMG_NAME
 
 workflows:
