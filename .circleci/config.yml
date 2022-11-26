@@ -1,15 +1,14 @@
 version: 2.1
 
 executors:
-  ubuntu:
-    machine:
-      image: ubuntu-2204:2022.10.1
-      resource_class: medium
-      docker_layer_caching: true
+  chelmsford:
+    docker:
+      - image: chelmsford:0.1.0
+    resource_class: medium
 
 jobs:
-  build:
-    description: Build image from dockerfile and push to Naiama DockerHub
+  build-test-push:
+    description: Build image from Dockerfile, test, and push to Naiama DockerHub
     parameters:
       img-name:
         description: Image name
@@ -19,24 +18,35 @@ jobs:
         type: string
     parallelism: 2
     executor:
-      name: ubuntu
+      name: chelmsford
     steps:
       - checkout
       - run:
+          name: build
           command: |
-            IMG_NAME="naiama/<< parameters.img-name >>:<< parameters.img-version>>"
-            docker build -t $IMG_NAME -f << parameters.img-name >>/Dockerfile << parameters.img-name >>
+            export IMG_NAME="naiama/<< parameters.img-name >>:<< parameters.img-version>>"
             docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_ACCESS_TOKEN"
+            docker build -t $IMG_NAME -f << parameters.img-name >>/Dockerfile << parameters.img-name >>
+      - run:
+          name: test
+          command: |
+            go mod init << parameters.img-name >>
+            go mod tidy
+            go test -v -timeout 30m -args -imgName=$IMG_NAME
+      - run:
+          name: push
+          command: |
             docker push $IMG_NAME
 
 workflows:
   build-images:
     jobs:
-      - build:
+      - build-test-push:
           context: docker-auth
           img-name: elland
           img-version: 0.1.0
-      - build:
+          
+      - build-test-push:
           context: docker-auth
           img-name: longor
           img-version: 0.1.0
