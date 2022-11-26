@@ -15,7 +15,8 @@ RUN bash $MINICONDA -b -p /opt/miniconda
 ENV PATH /opt/miniconda/bin:$PATH
 RUN eval "$(conda shell.bash hook)"
 
-RUN conda update -n base -c defaults conda
+RUN conda update -n base -c defaults conda && \
+    echo -e "\nconda activate mlops" >> ~/.bashrc
 
 # Python 3.9.*
 COPY ./environment.yml ./
@@ -29,7 +30,5 @@ RUN conda install pytorch torchvision torchaudio cpuonly -c pytorch
 
 # Lightning 1.7.7
 RUN conda install pytorch-lightning -c conda-forge
-
-RUN conda activate mlops
 
 CMD ["/bin/bash"]

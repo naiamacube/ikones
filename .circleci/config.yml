@@ -50,7 +50,7 @@ workflows:
       - build-test-push:
           context: docker-auth
           img-name: elland
-          img-version: 0.1.1
+          img-version: 0.1.2
           
       - build-test-push:
           context: docker-auth
