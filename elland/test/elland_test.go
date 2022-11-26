@@ -26,12 +26,12 @@ func TestPythonPackagesVersions(t *testing.T) {
 	assert.Equal(t, "Python 3.9.12", pythonOutput)
 
 	// Make sure PyTorch version is: 1.13.0
-  torchOpts := &docker.RunOptions{Command: []string{"python", "-c", "import torch; print(torch.__version__)"}}
+  torchOpts := &docker.RunOptions{Command: []string{"python", "-u", "-c", "import torch; print(torch.__version__)"}}
   torchOutput := docker.Run(t, *imgName, torchOpts)
   assert.Equal(t, "1.13.0", torchOutput)
 
 	// Make sure PyTorch Lightning version is: 1.7.7
-  lightningOpts := &docker.RunOptions{Command: []string{"python", "-c", "import pytorch_lightning; print(pytorch_lightning.__version__)"}}
+  lightningOpts := &docker.RunOptions{Command: []string{"python", "-u", "-c", "import pytorch_lightning; print(pytorch_lightning.__version__)"}}
   lightningOutput := docker.Run(t, *imgName, lightningOpts)
   assert.Equal(t, "1.7.7", lightningOutput)
 }
