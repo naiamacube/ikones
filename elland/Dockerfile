@@ -23,6 +23,7 @@ RUN conda env create -f environment.yml
 RUN conda init
 SHELL ["conda", "run", "-n", "mlops", "/bin/bash", "-c"]
 RUN echo -e "\nconda activate mlops" >> ~/.bashrc
+ENV PATH /opt/miniconda/envs/mlops/bin:$PATH
 
 # PyTorch 1.13.0 + pre-requisites
 RUN conda install astunparse numpy ninja pyyaml setuptools cmake cffi typing_extensions future six requests dataclasses mkl mkl-include
@@ -31,4 +32,4 @@ RUN conda install pytorch torchvision torchaudio cpuonly -c pytorch
 # Lightning 1.7.7
 RUN conda install pytorch-lightning -c conda-forge
 
-CMD ["/bin/bash", "-c"]
+CMD ["/bin/bash"]
