@@ -3,7 +3,7 @@ version: 2.1
 executors:
   chelmsford:
     docker:
-      - image: chelmsford:0.1.0
+      - image: naiama/chelmsford:0.1.0
     resource_class: medium
 
 jobs:
