@@ -36,6 +36,8 @@ jobs:
           name: Test
           working_directory: << parameters.img-name >>/test
           command: |
+            source "$BASH_ENV"
+            echo "$IMG_NAME"
             go mod init << parameters.img-name >>
             go mod tidy
             go test -v -timeout 30m -args -imgName=$IMG_NAME
