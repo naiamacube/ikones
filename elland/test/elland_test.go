@@ -20,10 +20,10 @@ func TestPythonPackagesVersions(t *testing.T) {
 
 	docker.Build(t, "../", buildOptions)
 
-	// Make sure Python version is: 3.9.12
+	// Make sure Python version is: 3.9.15
 	pythonOpts := &docker.RunOptions{Command: []string{"python", "--version"}}
 	pythonOutput := docker.Run(t, *imgName, pythonOpts)
-	assert.Equal(t, "Python 3.9.12", pythonOutput)
+	assert.Equal(t, "Python 3.9.15", pythonOutput)
 
 	// Make sure PyTorch version is: 1.13.0
   torchOpts := &docker.RunOptions{Command: []string{"python", "-u", "-c", "import torch; print(torch.__version__)"}}
