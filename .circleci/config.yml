@@ -27,20 +27,20 @@ jobs:
     steps:
       - checkout
       - run:
-          name: build
+          name: Build
           command: |
-            export IMG_NAME="naiama/<< parameters.img-name >>:<< parameters.img-version>>"
+            echo "export IMG_NAME=\"naiama/<< parameters.img-name >>:<< parameters.img-version>>\"" >> "$BASH_ENV"
             docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_ACCESS_TOKEN"
             docker build -t $IMG_NAME -f << parameters.img-name >>/Dockerfile << parameters.img-name >>
       - run:
-          name: test
+          name: Test
           working_directory: << parameters.img-name >>/test
           command: |
             go mod init << parameters.img-name >>
             go mod tidy
             go test -v -timeout 30m -args -imgName=$IMG_NAME
       - run:
-          name: push
+          name: Push
           command: |
             docker push $IMG_NAME
 
