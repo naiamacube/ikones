@@ -23,5 +23,5 @@ func TestTerraformVersion(t *testing.T) {
 	// Make sure Terraform version is 1.3.5
 	opts := &docker.RunOptions{Command: []string{"terraform", "-version"}}
 	output := docker.Run(t, *imgName, opts)
-	assert.Contains(t, "Terraform v1.3.5\non linux_amd64", output)
+	assert.Contains(t, output, "Terraform v1.3.5\non linux_amd64")
 }
