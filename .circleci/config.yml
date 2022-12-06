@@ -1,6 +1,6 @@
 version: 2.1
 
-executors:
+executors: 
   ubuntu:
     machine:
       image: ubuntu-2204:2022.10.2
@@ -29,8 +29,7 @@ jobs:
       - run:
           name: Build
           command: |
-            docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_ACCESS_TOKEN"
-            docker build -t naiama/<< parameters.img-name >>:<< parameters.img-version>> -f << parameters.img-name >>/Dockerfile << parameters.img-name >>
+            docker build -t naiama/<< parameters.img-name >>:<< parameters.img-version >> -f << parameters.img-name >>/Dockerfile << parameters.img-name >>
       - run:
           name: Test
           working_directory: << parameters.img-name >>/test
@@ -39,24 +38,39 @@ jobs:
             go mod tidy
             go test -v -timeout 30m -args -imgName=naiama/<< parameters.img-name >>:<< parameters.img-version>>
       - run:
-          name: Push
+          name: Push to DockerHub
           command: |
-            docker push naiama/<< parameters.img-name >>:<< parameters.img-version>>
+            docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_ACCESS_TOKEN"
+            docker push naiama/<< parameters.img-name >>:<< parameters.img-version >>
+      - run:
+          name: Push to Google Container Registry
+          command: |
+            export TAG=<< parameters.img-name >>:<< parameters.img-version >>
+            docker pull naiama/$TAG
+            docker tag naiama/$TAG eu.gcr.io/n3-theos/$TAG
+            docker login -u "_json_key" -p "$GCP_CREDENTIALS" https://eu.gcr.io
+            docker push eu.gcr.io/n3-theos/$TAG
 
 workflows:
   build-images:
     jobs:
       - build-test-push:
-          context: docker-auth
+          context: 
+            - docker-auth
+            - google-auth
           img-name: elland
           img-version: 0.1.2
           
       - build-test-push:
-          context: docker-auth
+          context:
+            - docker-auth
+            - google-auth
           img-name: longor
           img-version: 0.1.1
           
       - build-test-push:
-          context: docker-auth
+          context:
+            - docker-auth
+            - google-auth
           img-name: leicester
           img-version: 0.1.0
